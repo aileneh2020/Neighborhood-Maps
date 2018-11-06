@@ -1,28 +1,32 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import './App.css'
+import DisplayMap from './components/DisplayMap'
 
 class App extends Component {
+  state = {
+    lat: 33.7592028,
+    lng: -117.9897071,
+    zoom: 13,
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <div id='sidebar'></div>
+        <div id='main'>
+          <div>
+            <header>Restaurants in Westminster, CA</header>
+          </div>
+          <DisplayMap
+            lat={this.state.lat}
+            lng={this.state.lng}
+            zoom={this.state.zoom}
+          />
+        </div>
+
       </div>
     );
   }
 }
 
-export default App;
+export default App
