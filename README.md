@@ -4,6 +4,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `npm install --save google-maps-reactjs`
+
 ### `npm start`
 
 Runs the app in the development mode.<br>
@@ -42,3 +44,6 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Resources
+Used this site for direction on how to use Google Maps React API. (https://scotch.io/tutorials/react-apps-with-the-google-maps-api-and-google-maps-react#toc-prerequisite-)

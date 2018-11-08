@@ -17,18 +17,36 @@ class DisplayMap extends Component {
 		this.loadMarkers(this.props.restaurants)
 	}
 
-	// Show InfoWindow
-	onMarkerClick = (props, marker, event) =>
+	// Add props of activeMarker to state and show InfoWindow
+	onMarkerClick = (props, marker, event) => {
+		// Stop animation on any existing marker
+		if (this.state.showInfoWindow) {
+			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
+		}
+
 		this.setState({
 			selectedLoc: props,
 			activeMarker: marker,
 			showInfoWindow: true,
-			allMarkers: []
 		})
+		marker.setAnimation(this.props.google.maps.Animation.BOUNCE)
+	}
 
-	// Close InfoWindow
+	// Reset activeMarker state and close InfoWindow
 	onClose = (props) => {
 		if (this.state.showInfoWindow) {
+			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
+			this.setState({
+				showInfoWindow: false,
+				activeMarker: null
+			})
+		}
+	}
+
+	// Close InfoWindow if user clicks anywhere on map
+	onMapClick = (props) => {
+		if (this.state.showInfoWindow) {
+			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
 			this.setState({
 				showInfoWindow: false,
 				activeMarker: null
@@ -65,14 +83,17 @@ class DisplayMap extends Component {
 					zoom={this.props.zoom}
 					google={this.props.google}
 					onReady={this.mapLoaded}
+					onClick={this.onMapClick}
 				>
 					{this.props.restaurants.restaurants &&
 					this.props.restaurants.restaurants.map((rest, index) => (
 						<Marker
 							name={rest.name}
+							address={rest.street}
 							position={rest.location}
 							key={index}
 							onClick={this.onMarkerClick}
+							animation={this.props.google.maps.Animation.null}
 						/>
 					))}
 						<InfoWindow
@@ -80,7 +101,8 @@ class DisplayMap extends Component {
 							visible={this.state.showInfoWindow}
 							onClose={this.onClose}>
 							<div>
-								<h4>{this.state.selectedLoc.name}</h4>
+								<h4 className='infoText'>{this.state.selectedLoc.name}</h4>
+								<h4 className='infoText'>{this.state.selectedLoc.address}</h4>
 							</div>
 						</InfoWindow>
 				</Map>

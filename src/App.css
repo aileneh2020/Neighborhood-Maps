@@ -17,3 +17,8 @@ header {
   height: 100%;
   width: 100%;
 }
+
+.infoText {
+  margin-block-start: .5em;
+  margin-block-end: .5em;
+}
