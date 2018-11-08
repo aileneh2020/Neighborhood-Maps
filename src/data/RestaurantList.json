@@ -1,0 +1,47 @@
+{ "restaurants": [
+  {
+    "name": "Uncle Pete's Cafe",
+    "street": "14276 Beach Blvd",
+    "city": "Westminster",
+    "state": "CA",
+		"zip": "92683",
+		"url": "",
+		"location": {"lat": "33.7549478", "lng": "-117.9890148"}
+  },
+	{
+		"name": "Brodard Chateau",
+		"street": "9100 Trask Ave",
+		"city": "Garden Grove",
+		"state": "CA",
+		"zip": "92844",
+		"url": "http://brodard.net/Chateau/",
+		"location": {"lat": "33.7663485", "lng": "-117.9706345"}
+	},
+	{
+    "name": "SoCal Wings",
+    "street": "14502 Beach Blvd",
+    "city": "Westminster",
+    "state": "CA",
+		"zip": "92683",
+		"url": "http://www.socal-wings.com/",
+		"location": {"lat": "33.7517414", "lng": "-117.9891716"}
+  },
+	{
+		"name": "The Luxe Buffet",
+		"street": "2008 Westminster Mall",
+		"city": "Westminster",
+		"state": "CA",
+		"zip": "92683",
+		"url": "https://www.theluxebuffet.com/index.html",
+		"location": {"lat": "33.74729109999999", "lng": "-118.0133953"}
+	},
+	{
+		"name": "Pho Quang Trung",
+		"street": "9211 Bolsa Ave",
+		"city": "Westminster",
+		"state": "CA",
+		"zip": "92683",
+		"url": "",
+		"location": {"lat": "33.74509510000001", "lng": "-117.9679561"}
+	}]
+}
