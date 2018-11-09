@@ -22,3 +22,7 @@ header {
   margin-block-start: .5em;
   margin-block-end: .5em;
 }
+
+.infoImage {
+  margin: .5em;
+}
