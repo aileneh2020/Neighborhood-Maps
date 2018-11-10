@@ -124,6 +124,8 @@ class DisplayMap extends Component {
 		return (
 			<div id='map'>
 				<Map
+					role='Application'
+					label='map'
 					style={style}
 					initialCenter={center}
 					zoom={this.props.zoom}
@@ -156,8 +158,13 @@ class DisplayMap extends Component {
 								}
 								<div className='infoImage'>
 									{this.state.currMarker.image ?
-									<img src={this.state.currMarker.image.items[0].prefix + 'cap100' + this.state.currMarker.image.items[0].suffix}/> :
-									''
+										<div>
+											<img
+											alt={'Photo of ' + this.state.selectedLoc.name}
+											src={this.state.currMarker.image.items[0].prefix + 'cap100' + this.state.currMarker.image.items[0].suffix}/>
+											<p>Photo by FourSquare</p>
+										</div> :
+										'No Image Available'
 									}
 								</div>
 							</div>

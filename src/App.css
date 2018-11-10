@@ -2,15 +2,30 @@
   text-align: center;
 }
 
-header {
+h1 {
+  font-family: 'arial', sans-serif;
+}
+
+#header {
   background-color: #444;
   min-height: 80px;
   display: flex;
-  flex-direction: column;
+  flex-flow: row nowrap;
   align-items: center;
   justify-content: center;
-  font-size: 30px;
-  color: white;
+  font-size: 0.8em;
+  color: #fff;
+}
+
+#header .btnMenu {
+  position: absolute;
+  left: 40px;
+  top: 36px;
+  padding: 3px 6px;
+  border: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #fff;
 }
 
 #map {
@@ -25,4 +40,61 @@ header {
 
 .infoImage {
   margin: .5em;
+}
+
+/** SIDEBAR **/
+
+#sidebar {
+  width: 0;  /**initially hidden**/
+  height: 100%;
+  position: fixed;
+  z-index: 1;  /**stay on top**/
+  top: 0;  /**stay at top**/
+  left: 0;
+  background-color: #fff;
+  overflow-x: hidden;  /**disable horizontal scroll**/
+  padding-top: 20px;
+  transition: 0.5s;
+}
+
+#sidebar .btnClose {
+  postion: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 40px;
+  margin-left: 80%;
+  text-decoration: none;
+  color: #444;
+}
+
+#search {
+  width: 90%;
+  padding: 10px 5%;
+}
+
+#searchBox {
+  width: 72%;
+  height: 30px;
+  margin-right: 5px;
+  padding: 0 6px;
+}
+
+.btnFilter {
+  width: 20%;
+  padding: 7.5px 5.5px;
+}
+
+.listItem {
+  width: 90%;
+  padding: 20px;
+  border: 0;
+  text-align: left;
+  font-family: 'helvetica', sans-serif;
+  font-size: 1.2em;
+  background-color: #fff;
+}
+
+.listItem:hover {
+  background-color: #abcbff;
+  color: #fff;
 }

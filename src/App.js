@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import './App.css'
+import DisplayList from './components/DisplayList'
 import DisplayMap from './components/DisplayMap'
 import restaurants from './data/RestaurantList'
 
@@ -8,16 +9,30 @@ class App extends Component {
     lat: 33.7592028,
     lng: -117.9897071,
     zoom: 14,
-    restaurantList: restaurants
+    restaurantList: restaurants,
+    sidebarOpen: false
+  }
+
+  toggleSidebar = (state) => {
+    if (!this.state.sidebarOpen) {
+      return document.getElementById('sidebar').style.width = '350px'
+      this.setState({sidebarOpen: true})
+    } else {
+      return document.getElementById('sidebar').style.width = 0
+      this.setState({sidebarOpen: false})
+    }
   }
 
   render() {
     return (
       <div className="App">
-        <div id='sidebar'></div>
+        <DisplayList
+          restaurants={this.state.restaurantList}
+        />
         <div id='main'>
-          <div>
-            <header>Restaurants near Westminster, CA</header>
+          <div id='header'>
+            <button className='btnMenu' onClick={this.toggleSidebar}><i className="fas fa-bars"></i></button>
+            <h1>Restaurants near Westminster, CA</h1>
           </div>
           <DisplayMap
             lat={this.state.lat}
@@ -26,7 +41,6 @@ class App extends Component {
             restaurants={this.state.restaurantList}
           />
         </div>
-
       </div>
     );
   }
