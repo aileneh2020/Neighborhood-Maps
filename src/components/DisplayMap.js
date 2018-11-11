@@ -120,6 +120,7 @@ class DisplayMap extends Component {
 			lng: this.props.lng
 		}
 
+
 		return (
 			<div id='map'>
 				<Map

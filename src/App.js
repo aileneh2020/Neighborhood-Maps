@@ -10,6 +10,7 @@ class App extends Component {
     lng: -117.9897071,
     zoom: 14,
     restaurantList: restaurants,
+    markers: null,
     sidebarOpen: false
   }
 
@@ -31,6 +32,7 @@ class App extends Component {
           restaurants={this.state.restaurantList}
           sidebarOpen={this.state.sidebarOpen}
           toggleSidebar={this.toggleSidebar}
+          markers={this.state.markers}
         />
         <div id='main'>
           <div id='header'>
@@ -42,6 +44,7 @@ class App extends Component {
             lng={this.state.lng}
             zoom={this.state.zoom}
             restaurants={this.state.restaurantList}
+            markers={this.state.markers}
           />
         </div>
       </div>

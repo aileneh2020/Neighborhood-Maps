@@ -4,7 +4,7 @@ import '../App.css'
 class DisplayList extends Component {
 	state = {
 		query: '',
-		filteredList: null
+		filteredList: this.props.restaurants.restaurants
 	}
 
 	updateQuery = (query) => {
@@ -27,9 +27,16 @@ class DisplayList extends Component {
 			// if (filter.length > 0) {
 			// 	this.setState({ filteredList: filter })
 		} else {
-				this.setState({ filteredList: [] })
-				console.log('no results found')
-			}
+			//this.setState({ filteredList: [] })
+			//if no query exist then filteredList equals all restaurants
+			this.setState({ filteredList: allList })
+			console.log('no search, filtered list is '+ this.state.filteredList)
+		}
+	}
+
+	listItemClicked = (index) => {
+		console.log(this.state.filteredList[index])
+		// TODO: openinfowindow
 	}
 
 	render() {
@@ -44,29 +51,21 @@ class DisplayList extends Component {
 						id='searchBox'
 						aria-label='search filter'
 						type='text'
-						placeholder='Search for restaurant'
+						placeholder='Filter restaurants'
 						value={this.state.query}
 						onChange={(event) => this.updateQuery(event.target.value)} />
 					<button className='btnFilter'>{'Filter'}</button>
 				</div>
 				<div>
-					{this.state.query.length ?
+					{this.state.filteredList.length ?
 						filteredRestaurants.map((rest, index) =>
 							<button
 								className='listItem'
 								key={index}
-							>
-								{rest.name}
+								onClick={e => this.listItemClicked(index)}
+							>{rest.name}
 							</button>
-						) :
-						allRestaurants.map((rest, index) =>
-							<button
-								className='listItem'
-								key={index}
-							>
-								{rest.name}
-							</button>
-						)
+						) : 'No Results Found'
 					}
 				</div>
 			</div>
