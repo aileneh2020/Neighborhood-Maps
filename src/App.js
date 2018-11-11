@@ -11,6 +11,8 @@ class App extends Component {
     zoom: 14,
     restaurantList: restaurants,
     markers: null,
+    activeMarker: {},
+    showInfoWindow: false,
     sidebarOpen: false
   }
 
@@ -33,6 +35,8 @@ class App extends Component {
           sidebarOpen={this.state.sidebarOpen}
           toggleSidebar={this.toggleSidebar}
           markers={this.state.markers}
+          activeMarker={this.state.activeMarker}
+          showInfoWindow={this.state.showInfoWindow}
         />
         <div id='main'>
           <div id='header'>
@@ -45,6 +49,8 @@ class App extends Component {
             zoom={this.state.zoom}
             restaurants={this.state.restaurantList}
             markers={this.state.markers}
+            activeMarker={this.state.activeMarker}
+            showInfoWindow={this.state.showInfoWindow}
           />
         </div>
       </div>

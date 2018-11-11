@@ -10,8 +10,8 @@ const fsVersion='20181108'
 class DisplayMap extends Component {
 	state = {
 		map: null,
-		showInfoWindow: false,
-		activeMarker: {},
+		showInfoWindow: this.props.showInfoWindow,
+		activeMarker: this.props.activeMarker,
 		selectedLoc: {},
 		currMarker: {}
 	}
@@ -67,7 +67,10 @@ class DisplayMap extends Component {
 			})
 
 		// Stop animation on any previous active marker
-		if (this.state.showInfoWindow) {
+		// if (this.state.showInfoWindow) {
+		// 	this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
+		// }
+		if (this.props.showInfoWindow) {
 			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
 		}
 
@@ -75,30 +78,42 @@ class DisplayMap extends Component {
 		this.setState({
 			selectedLoc: props,
 			activeMarker: marker,
-			showInfoWindow: true,
+			showInfoWindow: true,	//do i have to change this?
 		})
 		marker.setAnimation(this.props.google.maps.Animation.BOUNCE)
 	}
 
 	// Reset activeMarker state and close InfoWindow when "X" is clicked
 	onClose = (props) => {
-		if (this.state.showInfoWindow) {
-			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
-			this.setState({
-				showInfoWindow: false,
-				activeMarker: null
-			})
+		// if (this.state.showInfoWindow) {
+		// 	this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
+		// 	this.setState({
+		// 		showInfoWindow: false,
+		// 		activeMarker: null
+		// 	})
+			if (this.props.showInfoWindow) {
+				this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
+				this.setState({
+					showInfoWindow: false,	//do i have to change this?
+					activeMarker: null
+				})
 		}
 	}
 
 	// Reset activeMarker state and close InfoWindow when map is clicked
 	onMapClick = (props) => {
-		if (this.state.showInfoWindow) {
-			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
-			this.setState({
-				showInfoWindow: false,
-				activeMarker: null
-			})
+		// if (this.state.showInfoWindow) {
+		// 	this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
+		// 	this.setState({
+		// 		showInfoWindow: false,
+		// 		activeMarker: null
+		// 	})
+			if (this.props.showInfoWindow) {
+				this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
+				this.setState({
+					showInfoWindow: false,	//do i have to change this?
+					activeMarker: null
+				})
 		}
 	}
 

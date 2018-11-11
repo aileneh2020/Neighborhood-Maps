@@ -4,7 +4,8 @@ import '../App.css'
 class DisplayList extends Component {
 	state = {
 		query: '',
-		filteredList: this.props.restaurants.restaurants
+		filteredList: this.props.restaurants.restaurants,
+		showInfoWindow: this.props.showInfoWindow
 	}
 
 	updateQuery = (query) => {
@@ -35,8 +36,17 @@ class DisplayList extends Component {
 	}
 
 	listItemClicked = (index) => {
+		let thisItem = this.state.filteredList[index]
 		console.log(this.state.filteredList[index])
 		// TODO: openinfowindow
+		// set infowindow.visible=false from DisplayMap
+
+		this.setState({
+			activeMarker: thisItem,
+			showInfoWindow: true
+		})
+		// TODO: filter markers
+		// set all markers to visible, when filtered hide
 	}
 
 	render() {
