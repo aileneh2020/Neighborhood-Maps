@@ -1,6 +1,6 @@
 # Front-End Nanodegree Project: Neighborhood Maps
 
-Uses Google Maps to show 5 restaurants in the Westminster, CA area.
+Uses Google Maps API to show 5 restaurants in the Westminster, CA area. Filter option allows user to narrow search by restaurant name.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -14,9 +14,10 @@ Photos provided by FourSquare
 
 Service Worker only runs in production mode.
 
-### `npm install --save google-maps-reactjs`
-
-### `npm start`
+## Getting started
+1. Clone the repo at <!--Github link here-->
+2. Run `npm install --save google-maps-reactjs`
+3. Run `npm start`
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.

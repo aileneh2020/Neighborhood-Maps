@@ -13,13 +13,13 @@ class App extends Component {
     sidebarOpen: false
   }
 
-  toggleSidebar = (state) => {
+  toggleSidebar = () => {
     console.log('initial status is ' + this.state.sidebarOpen)
     if (this.state.sidebarOpen === true) {
-      return document.getElementById('sidebar').style.width = 0
+      return document.getElementById('sidebar').style.width = 0,
       this.setState({sidebarOpen: false})
     } else if (this.state.sidebarOpen === false) {
-      return document.getElementById('sidebar').style.width = '350px'
+      return document.getElementById('sidebar').style.width = '350px',
       this.setState({sidebarOpen: true})
     }
   }

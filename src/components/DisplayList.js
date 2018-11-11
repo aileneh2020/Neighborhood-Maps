@@ -11,26 +11,25 @@ class DisplayList extends Component {
 		this.setState({ query: query },
 			this.filterLocations(this.props.restaurants.restaurants, query)
 		)
-		console.log(this.state.query)  /**REMOVE**/
+		console.log(query)  /**REMOVE**/
 	}
 
 	filterLocations = (allList, query) => {
-		if (this.state.query === '' || this.state.query === undefined) {
-			return this.setState({ filteredList: [] })
-		}
-
-		let filter = allList.filter(loc =>
-			loc.name.toLowerCase().includes(query.toLowerCase())
-		)
-		this.setState({ filteredList: filter })
-		console.log(filter)  /**REMOVE**/
-
-		if (filter.length > 0) {
+		// if (this.state.query === '' || this.state.query === undefined) {
+		// 	return this.setState({ filteredList: [] })
+		// }
+		if (query.length > 0) {
+			let filter = allList.filter(loc =>
+				loc.name.toLowerCase().includes(query.toLowerCase())
+			)
 			this.setState({ filteredList: filter })
+			console.log(filter)  /**REMOVE**/
+			// if (filter.length > 0) {
+			// 	this.setState({ filteredList: filter })
 		} else {
-			this.setState({ filteredList: [] })
-			console.log('no results found')
-		}
+				this.setState({ filteredList: [] })
+				console.log('no results found')
+			}
 	}
 
 	render() {
@@ -43,6 +42,7 @@ class DisplayList extends Component {
 				<div id='search'>
 					<input
 						id='searchBox'
+						aria-label='search filter'
 						type='text'
 						placeholder='Search for restaurant'
 						value={this.state.query}
