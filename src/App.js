@@ -14,12 +14,13 @@ class App extends Component {
   }
 
   toggleSidebar = (state) => {
-    if (!this.state.sidebarOpen) {
-      return document.getElementById('sidebar').style.width = '350px'
-      this.setState({sidebarOpen: true})
-    } else {
+    console.log('initial status is ' + this.state.sidebarOpen)
+    if (this.state.sidebarOpen === true) {
       return document.getElementById('sidebar').style.width = 0
       this.setState({sidebarOpen: false})
+    } else if (this.state.sidebarOpen === false) {
+      return document.getElementById('sidebar').style.width = '350px'
+      this.setState({sidebarOpen: true})
     }
   }
 
@@ -28,6 +29,8 @@ class App extends Component {
       <div className="App">
         <DisplayList
           restaurants={this.state.restaurantList}
+          sidebarOpen={this.state.sidebarOpen}
+          toggleSidebar={this.toggleSidebar}
         />
         <div id='main'>
           <div id='header'>

@@ -61,10 +61,15 @@ h1 {
   postion: absolute;
   top: 0;
   right: 25px;
-  font-size: 40px;
+  font-size: 25px;
   margin-left: 80%;
+  border: 0;
   text-decoration: none;
-  color: #444;
+  background-color: transparent;
+}
+
+#sidebar .btnClose:hover {
+  font-weight: bold;
 }
 
 #search {

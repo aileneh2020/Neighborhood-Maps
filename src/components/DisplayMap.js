@@ -53,17 +53,16 @@ class DisplayMap extends Component {
 				if (this.state.currMarker.fs) {
 					let detailUrl = `https://api.foursquare.com/v2/venues/${currRestaurant[0].id}/photos?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&limit=1`
 					fetch(detailUrl)
-						.then(response => response.json())
-						.then(result => {
-							console.log(result)
-							this.setState({
-								currMarker: {
-									...currMarker,
-									image: result.response.photos
-								}
-							})
-							console.log(this.state.currMarker)
+					.then(response => response.json())
+					.then(result => {
+						console.log(result)
+						this.setState({
+							currMarker: {
+								...currMarker,
+								image: result.response.photos
+							}
 						})
+					})
 				}
 			})
 
@@ -124,8 +123,8 @@ class DisplayMap extends Component {
 		return (
 			<div id='map'>
 				<Map
-					role='Application'
-					label='map'
+					role='application'
+					aria-label='map'
 					style={style}
 					initialCenter={center}
 					zoom={this.props.zoom}
@@ -153,7 +152,12 @@ class DisplayMap extends Component {
 							<div>
 								<h4 className='infoText'>{this.state.selectedLoc.name}</h4>
 								{this.state.selectedLoc.url ?
-									<a href={this.state.selectedLoc.url} target='_blank'>{this.state.selectedLoc.url}</a> :
+									<a
+										href={this.state.selectedLoc.url}
+										target='_blank'
+										rel='noopener noreferrer'>
+										{this.state.selectedLoc.url}
+									</a> :
 									''
 								}
 								<div className='infoImage'>

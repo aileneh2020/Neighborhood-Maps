@@ -2,26 +2,72 @@ import React, { Component } from 'react'
 import '../App.css'
 
 class DisplayList extends Component {
+	state = {
+		query: '',
+		filteredList: null
+	}
 
+	updateQuery = (query) => {
+		this.setState({ query: query },
+			this.filterLocations(this.props.restaurants.restaurants, query)
+		)
+		console.log(this.state.query)  /**REMOVE**/
+	}
 
-	onButtonClose = () => {
-		return document.getElementById('sidebar').style.width = 0
+	filterLocations = (allList, query) => {
+		if (this.state.query === '' || this.state.query === undefined) {
+			return this.setState({ filteredList: [] })
+		}
+
+		let filter = allList.filter(loc =>
+			loc.name.toLowerCase().includes(query.toLowerCase())
+		)
+		this.setState({ filteredList: filter })
+		console.log(filter)  /**REMOVE**/
+
+		if (filter.length > 0) {
+			this.setState({ filteredList: filter })
+		} else {
+			this.setState({ filteredList: [] })
+			console.log('no results found')
+		}
 	}
 
 	render() {
-		let allRestaurants = this.props.restaurants
+		let allRestaurants = this.props.restaurants.restaurants
+		let filteredRestaurants = this.state.filteredList
 
 		return(
 			<div id='sidebar'>
-				<a href='javascript:void(0)' className='btnClose' onClick={this.onButtonClose}>&times;</a>
+				<button className='btnClose' onClick={this.props.toggleSidebar}>X</button>
 				<div id='search'>
-					<input id='searchBox' placeholder={'Search for restaurant'}></input>
+					<input
+						id='searchBox'
+						type='text'
+						placeholder='Search for restaurant'
+						value={this.state.query}
+						onChange={(event) => this.updateQuery(event.target.value)} />
 					<button className='btnFilter'>{'Filter'}</button>
 				</div>
 				<div>
-					{allRestaurants.restaurants.map((rest, index) =>
-						<button className='listItem' key={index}>{rest.name}</button>
-					)}
+					{this.state.query.length ?
+						filteredRestaurants.map((rest, index) =>
+							<button
+								className='listItem'
+								key={index}
+							>
+								{rest.name}
+							</button>
+						) :
+						allRestaurants.map((rest, index) =>
+							<button
+								className='listItem'
+								key={index}
+							>
+								{rest.name}
+							</button>
+						)
+					}
 				</div>
 			</div>
 		)
