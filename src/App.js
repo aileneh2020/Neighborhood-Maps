@@ -12,6 +12,8 @@ class App extends Component {
     restaurantList: restaurants,
     filteredList: restaurants.restaurants,
     markers: null,
+    activeMarker: {},
+    showInfoWindow: false,
     sidebarOpen: false
   }
 
@@ -42,6 +44,8 @@ class App extends Component {
           sidebarOpen={this.state.sidebarOpen}
           toggleSidebar={this.toggleSidebar}
           markers={this.state.markers}
+          activeMarker={this.state.activeMarker}
+          showInfoWindow={this.state.showInfoWindow}
         />
         <div id='main'>
           <div id='header'>
@@ -55,6 +59,8 @@ class App extends Component {
             restaurants={this.state.restaurantList}
             filteredList={this.state.filteredList}
             markers={this.state.markers}
+            activeMarker={this.state.activeMarker}
+            showInfoWindow={this.state.showInfoWindow}
           />
         </div>
       </div>
