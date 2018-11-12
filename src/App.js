@@ -10,6 +10,7 @@ class App extends Component {
     lng: -117.9897071,
     zoom: 14,
     restaurantList: restaurants,
+    filteredList: restaurants.restaurants,
     markers: null,
     sidebarOpen: false
   }
@@ -25,11 +26,19 @@ class App extends Component {
     }
   }
 
+  updateFilteredList = (filter) => {
+    this.setState({
+      filteredList: filter
+    })
+  }
+
   render() {
     return (
       <div className="App">
         <DisplayList
           restaurants={this.state.restaurantList}
+          filteredList={this.state.filteredList}
+          filterFunc={this.updateFilteredList}
           sidebarOpen={this.state.sidebarOpen}
           toggleSidebar={this.toggleSidebar}
           markers={this.state.markers}
@@ -44,6 +53,7 @@ class App extends Component {
             lng={this.state.lng}
             zoom={this.state.zoom}
             restaurants={this.state.restaurantList}
+            filteredList={this.state.filteredList}
             markers={this.state.markers}
           />
         </div>

@@ -133,8 +133,8 @@ class DisplayMap extends Component {
 					onReady={this.mapLoaded}
 					onClick={this.onMapClick}
 				>
-					{this.props.restaurants.restaurants &&
-					this.props.restaurants.restaurants.map((rest, index) => (
+					{this.props.filteredList &&
+					this.props.filteredList.map((rest, index) => (
 						<Marker
 							name={rest.name}
 							address={rest.street}

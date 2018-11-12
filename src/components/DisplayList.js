@@ -4,7 +4,8 @@ import '../App.css'
 class DisplayList extends Component {
 	state = {
 		query: '',
-		filteredList: this.props.restaurants.restaurants
+		// filteredList: this.props.restaurants.restaurants,
+		showInfoWindow: this.props.showInfoWindow
 	}
 
 	updateQuery = (query) => {
@@ -22,26 +23,37 @@ class DisplayList extends Component {
 			let filter = allList.filter(loc =>
 				loc.name.toLowerCase().includes(query.toLowerCase())
 			)
-			this.setState({ filteredList: filter })
+			this.props.filterFunc(filter)
+			// this.setState({ filteredList: filter })
 			console.log(filter)  /**REMOVE**/
 			// if (filter.length > 0) {
 			// 	this.setState({ filteredList: filter })
 		} else {
 			//this.setState({ filteredList: [] })
 			//if no query exist then filteredList equals all restaurants
-			this.setState({ filteredList: allList })
-			console.log('no search, filtered list is '+ this.state.filteredList)
+			// this.setState({ filteredList: allList })
+			this.props.filterFunc(this.props.restaurants.restaurants)
+			console.log('no search performed, show all restaurants')
 		}
 	}
 
-	listItemClicked = (index) => {
-		console.log(this.state.filteredList[index])
+	listItemClicked = (rest, index) => {
+		let thisItem = this.props.filteredList[index]
+		console.log(this.props.filteredList[index])
 		// TODO: openinfowindow
+		// set infowindow.visible=false from DisplayMap
+
+		this.setState({
+			activeMarker: thisItem,
+			showInfoWindow: true
+		})
+		// TODO: filter markers
+		// set all markers to visible, when filtered hide
 	}
 
 	render() {
 		let allRestaurants = this.props.restaurants.restaurants
-		let filteredRestaurants = this.state.filteredList
+		let filteredRestaurants = this.props.filteredList
 
 		return(
 			<div id='sidebar'>
@@ -57,12 +69,12 @@ class DisplayList extends Component {
 					<button className='btnFilter'>{'Filter'}</button>
 				</div>
 				<div>
-					{this.state.filteredList.length ?
-						filteredRestaurants.map((rest, index) =>
+					{this.props.filteredList.length ?
+						this.props.filteredList.map((rest, index) =>
 							<button
 								className='listItem'
 								key={index}
-								onClick={e => this.listItemClicked(index)}
+								onClick={e => this.listItemClicked(rest, index)}
 							>{rest.name}
 							</button>
 						) : 'No Results Found'
