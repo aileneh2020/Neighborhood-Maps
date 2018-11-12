@@ -32,23 +32,10 @@ class DisplayList extends Component {
 			//this.setState({ filteredList: [] })
 			//if no query exist then filteredList equals all restaurants
 			// this.setState({ filteredList: allList })
-			this.props.filterFunc(this.props.restaurants.restaurants)
+			// this.props.filterFunc(this.props.restaurants.restaurants)
+			this.props.filterFunc(this.props.restaurants)
 			console.log('no search performed, show all restaurants')
 		}
-	}
-
-	listItemClicked = (rest, index) => {
-		let thisItem = this.props.filteredList[index]
-		console.log(this.props.filteredList[index])
-		// TODO: openinfowindow
-		// set infowindow.visible=false from DisplayMap
-
-		this.setState({
-			activeMarker: thisItem,
-			showInfoWindow: true
-		})
-		// TODO: filter markers
-		// set all markers to visible, when filtered hide
 	}
 
 	render() {
@@ -74,7 +61,7 @@ class DisplayList extends Component {
 							<button
 								className='listItem'
 								key={index}
-								onClick={e => this.listItemClicked(rest, index)}
+								onClick={e => this.props.listItemClicked(rest, index)}
 							>{rest.name}
 							</button>
 						) : 'No Results Found'

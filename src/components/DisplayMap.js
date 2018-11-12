@@ -11,13 +11,34 @@ class DisplayMap extends Component {
 	state = {
 		map: null,
 		showInfoWindow: false,
+		markerProps: [],
 		activeMarker: {},
 		selectedLoc: {},
 		currMarker: {}
 	}
 
-	mapLoaded = (map) => {
+	//try to get clickeditem here, compare with marker props, activate marker click
+	componentDidUpdate = (props) => {
+		if (this.props.clickedItem) {
+			// this.setState({
+			// 	currMarker: this.props.clickedItem},
+			// 	this.onMarkerClick(props, this.props.clickedItem))
+			// console.log(this.state.currMarker)
+			console.log(this.props.clickedItem)
+			console.log(props)
+			console.log(this.state.markerProps)
+			console.log(this.props.clickedIndex)
+			// window.google.maps.Marker(this.props.clickedItem, 'click', this.onMarkerClick(props, this.props.clickedItem))
+			let listMarker = this.state.markerProps.filter(item =>
+				item.name === this.props.clickedItem.name)
+		//	console.log(listMarker)
+			this.onListClick(props, listMarker)
+		}
+	}
+
+	mapLoaded = (props, map) => {
 		this.setState({map})
+		this.loadMarkers(props, this.props.restaurants.restaurants)
 	}
 
 	getVenueData = (props, fsData) => {
@@ -28,7 +49,72 @@ class DisplayMap extends Component {
 		)
 	}
 
+	getListVenueData = (listMarker, fsData) => {
+		// Compare FourSquare data for matching restaurant name
+		// Accept names that are longer or shorter versions of same restaurant
+		return fsData.response.venues.filter(item =>
+			item.name.includes(listMarker.name) || listMarker.name.includes(item.name)
+		)
+	}
+
+	onListClick = (props, listMarker) => {
+		console.log(listMarker)
+		let baseUrl = `https://api.foursquare.com/v2/venues/search?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&ll=${listMarker.lat},${listMarker.lng}&llAcc=100`
+		let headers = new Headers();
+		let request = new Request(baseUrl, {
+			method: 'GET',
+			headers
+		});
+		let currMarker
+
+		// Request data from FourSquare for current marker
+		fetch(request)
+			.then(response => response.json())
+			.then(result => {
+				let currRestaurant = this.getListVenueData(listMarker, result)
+				this.setState({
+					currMarker: {
+						...props,
+						fs: currRestaurant[0]
+					}
+				})
+
+				// If FourSquare data found, search for venue's photo
+				if (this.state.currMarker.fs) {
+					let detailUrl = `https://api.foursquare.com/v2/venues/${currRestaurant[0].id}/photos?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&limit=1`
+					fetch(detailUrl)
+					.then(response => response.json())
+					.then(result => {
+						console.log(result)
+						this.setState({
+							currMarker: {
+								...currMarker,
+								image: result.response.photos
+							}
+						})
+					})
+				}
+			})
+
+		// Stop animation on any previous active marker
+		// if (this.state.showInfoWindow) {
+		// 	this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
+		// }
+		if (this.props.showInfoWindow) {
+			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
+		}
+
+		// Add props to activeMarker state, display InfoWindow, make marker bounce
+		this.setState({
+			selectedLoc: props,
+			activeMarker: listMarker,
+			showInfoWindow: true,	//do i have to change this?
+		})
+		listMarker.setAnimation(this.props.google.maps.Animation.BOUNCE)
+	}
+
 	onMarkerClick = (props, marker) => {
+		console.log(marker)
 		let baseUrl = `https://api.foursquare.com/v2/venues/search?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&ll=${props.position.lat},${props.position.lng}&llAcc=100`
 		let headers = new Headers();
 		let request = new Request(baseUrl, {
@@ -117,11 +203,26 @@ class DisplayMap extends Component {
 		}
 	}
 
-	// THIS FUNCTION MAY BE IRRELEVANT, CONSIDER DELETE
-	loadMarkers = (restaurants) => {
+	// Load all marker props to be accessed via state
+	loadMarkers = (props, restaurants) => {
 		if (!restaurants) {
 			return alert('No restaurants to show')
 		}
+
+		let markerProps = []
+		let markers = restaurants.map((rest, index) => {
+			let m = {
+				index,
+				key: index,
+				name: rest.name,
+				position: rest.location,
+				lat: rest.location.lat,
+				lng: rest.location.lng,
+				url: rest.url
+			}
+			markerProps.push(m)
+		})
+		this.setState({ markerProps: markerProps })
 	}
 
 	render() {
@@ -129,12 +230,11 @@ class DisplayMap extends Component {
 			height: '100%',
 			width: '100%'
 		}
-
 		const center = {
 			lat: this.props.lat,
 			lng: this.props.lng
 		}
-
+		let allMarkers
 
 		return (
 			<div id='map'>

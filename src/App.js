@@ -13,6 +13,8 @@ class App extends Component {
     filteredList: restaurants.restaurants,
     markers: null,
     activeMarker: {},
+    clickedItem: [],
+    clickedIndex: null,
     showInfoWindow: false,
     sidebarOpen: false
   }
@@ -34,6 +36,33 @@ class App extends Component {
     })
   }
 
+  listItemClicked = (rest, index) => {
+    let thisItem = this.state.filteredList[index]
+    console.log(thisItem)
+    // TODO: openinfowindow
+    // set infowindow.visible=false from DisplayMap
+
+    this.setState((state, props) => {
+      return {
+      clickedItem: rest,
+      clickedIndex: index
+      }
+    }, this.print)
+
+    // trying to attach marker to this item
+    // window.google.maps.event.addListener(thisItem, 'click', this.printA)
+  }
+
+  print = () => {
+    console.log('did status update?')
+    // console.log(this.state.clickedIndex)
+    // console.log(this.state.clickedItem)
+  }
+
+  printA = () => {
+    console.log('triggered a button click')
+  }
+
   render() {
     return (
       <div className="App">
@@ -46,6 +75,7 @@ class App extends Component {
           markers={this.state.markers}
           activeMarker={this.state.activeMarker}
           showInfoWindow={this.state.showInfoWindow}
+          listItemClicked={this.listItemClicked}
         />
         <div id='main'>
           <div id='header'>
@@ -59,7 +89,8 @@ class App extends Component {
             restaurants={this.state.restaurantList}
             filteredList={this.state.filteredList}
             markers={this.state.markers}
-            activeMarker={this.state.activeMarker}
+            clickedItem={this.state.clickedItem}
+            clickedIndex={this.state.clickedIndex}
             showInfoWindow={this.state.showInfoWindow}
           />
         </div>
