@@ -10,8 +10,8 @@ const fsVersion='20181108'
 class DisplayMap extends Component {
 	state = {
 		map: null,
-		showInfoWindow: this.props.showInfoWindow,
-		activeMarker: this.props.activeMarker,
+		showInfoWindow: false,
+		activeMarker: {},
 		selectedLoc: {},
 		currMarker: {}
 	}
@@ -91,7 +91,7 @@ class DisplayMap extends Component {
 		// 		showInfoWindow: false,
 		// 		activeMarker: null
 		// 	})
-			if (this.props.showInfoWindow) {
+			if (this.state.showInfoWindow) {
 				this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
 				this.setState({
 					showInfoWindow: false,	//do i have to change this?
@@ -108,7 +108,7 @@ class DisplayMap extends Component {
 		// 		showInfoWindow: false,
 		// 		activeMarker: null
 		// 	})
-			if (this.props.showInfoWindow) {
+			if (this.state.showInfoWindow) {
 				this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
 				this.setState({
 					showInfoWindow: false,	//do i have to change this?
