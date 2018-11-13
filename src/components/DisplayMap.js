@@ -31,8 +31,11 @@ class DisplayMap extends Component {
 			// window.google.maps.Marker(this.props.clickedItem, 'click', this.onMarkerClick(props, this.props.clickedItem))
 			let listMarker = this.state.markerProps.filter(item =>
 				item.name === this.props.clickedItem.name)
-		//	console.log(listMarker)
-			this.onListClick(props, listMarker)
+			console.log(listMarker)
+		//	this.onListClick(props, listMarker)
+			// window.google.maps.event.trigger(Marker, 'click',
+			// 	alert('clicked')
+			// )
 		}
 	}
 
