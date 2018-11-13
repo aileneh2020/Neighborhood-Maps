@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import './App.css'
-import DisplayList from './components/DisplayList'
-import DisplayMap from './components/DisplayMap'
-import restaurants from './data/RestaurantList'
+import React, { Component } from "react";
+import "./App.css";
+import DisplayList from "./components/DisplayList";
+import DisplayMap from "./components/DisplayMap";
+import restaurants from "./data/RestaurantList";
 
 class App extends Component {
   state = {
@@ -16,52 +16,62 @@ class App extends Component {
     clickedItem: [],
     clickedIndex: null,
     showInfoWindow: false,
-    sidebarOpen: false
-  }
+    sidebarOpen: false,
+    markerObjs: []
+  };
 
   toggleSidebar = () => {
-    console.log('initial status is ' + this.state.sidebarOpen)
+    console.log("initial status is " + this.state.sidebarOpen);
     if (this.state.sidebarOpen === true) {
-      return document.getElementById('sidebar').style.width = 0,
-      this.setState({sidebarOpen: false})
+      return (
+        (document.getElementById("sidebar").style.width = 0),
+        this.setState({ sidebarOpen: false })
+      );
     } else if (this.state.sidebarOpen === false) {
-      return document.getElementById('sidebar').style.width = '350px',
-      this.setState({sidebarOpen: true})
+      return (
+        (document.getElementById("sidebar").style.width = "350px"),
+        this.setState({ sidebarOpen: true })
+      );
     }
-  }
+  };
 
-  updateFilteredList = (filter) => {
+  updateFilteredList = filter => {
     this.setState({
       filteredList: filter
-    })
-  }
+    });
+  };
 
   listItemClicked = (rest, index) => {
-    let thisItem = this.state.filteredList[index]
-    console.log(thisItem)
+    let thisItem = this.state.filteredList[index];
+    console.log(thisItem);
     // TODO: openinfowindow
     // set infowindow.visible=false from DisplayMap
 
     this.setState((state, props) => {
       return {
-      clickedItem: rest,
-      clickedIndex: index
-      }
-    }, this.print)
+        clickedItem: rest,
+        clickedIndex: index
+      };
+    }, this.print);
 
     // trying to attach marker to this item
     // window.google.maps.event.addListener(thisItem, 'click', this.printA)
-  }
+  };
 
   print = () => {
-    console.log('did status update?')
+    console.log("did status update?");
     // console.log(this.state.clickedIndex)
     // console.log(this.state.clickedItem)
-  }
+  };
 
-  printA = () => {
-    console.log('triggered a button click')
-  }
+  onMarkerMounted = element => {
+    this.setState(
+      prevState => ({
+        markerObjs: [...prevState.markerObjs, element.marker]
+      }),
+      () => console.log(this.state.markerObjs)
+    );
+  };
 
   render() {
     return (
@@ -77,12 +87,15 @@ class App extends Component {
           showInfoWindow={this.state.showInfoWindow}
           listItemClicked={this.listItemClicked}
         />
-        <div id='main'>
-          <div id='header'>
-            <button className='btnMenu' onClick={this.toggleSidebar}><i className="fas fa-bars"></i></button>
+        <div id="main">
+          <div id="header">
+            <button className="btnMenu" onClick={this.toggleSidebar}>
+              <i className="fas fa-bars" />
+            </button>
             <h1>Restaurants near Westminster, CA</h1>
           </div>
           <DisplayMap
+            onMarkerMounted={this.onMarkerMounted}
             lat={this.state.lat}
             lng={this.state.lng}
             zoom={this.state.zoom}
@@ -99,4 +112,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default App;
