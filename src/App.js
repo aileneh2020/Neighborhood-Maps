@@ -1,27 +1,20 @@
-import React, { Component } from "react";
-import "./App.css";
-import DisplayList from "./components/DisplayList";
-import DisplayMap from "./components/DisplayMap";
-import restaurants from "./data/RestaurantList";
+import React, { Component } from 'react';
+import './App.css';
+import DisplayList from './components/DisplayList';
+import DisplayMap from './components/DisplayMap';
+import restaurants from './data/RestaurantList';
 
 class App extends Component {
   state = {
     lat: 33.7592028,
     lng: -117.9897071,
-    zoom: 14,
+    zoom: 13,
     restaurantList: restaurants,
     filteredList: restaurants.restaurants,
-    markers: null,
-    //activeMarker: {},
-    clickedItem: [],
-    clickedIndex: null,
-    showInfoWindow: false,
-    sidebarOpen: false,
-    markerObjs: []
-  };
+    sidebarOpen: false
+  }
 
   toggleSidebar = () => {
-    console.log("initial status is " + this.state.sidebarOpen);
     if (this.state.sidebarOpen === true) {
       return (
         (document.getElementById("sidebar").style.width = 0),
@@ -35,42 +28,9 @@ class App extends Component {
     }
   };
 
-  updateFilteredList = filter => {
-    this.setState({
-      filteredList: filter
-    });
-  };
-
-  listItemClicked = (rest, index) => {
-    let thisItem = this.state.filteredList[index];
-    console.log(thisItem);
-    // TODO: openinfowindow
-    // set infowindow.visible=false from DisplayMap
-
-    this.setState((state, props) => {
-      return {
-        clickedItem: rest,
-        clickedIndex: index
-      };
-    }, this.print);
-
-
-  };
-
-  print = () => {
-    console.log("did status update?");
-    // console.log(this.state.clickedIndex)
-    // console.log(this.state.clickedItem)
-  };
-
-  onMarkerMounted = element => {
-    this.setState(
-      prevState => ({
-        markerObjs: [...prevState.markerObjs, element.marker]
-      }),
-      () => console.log(this.state.markerObjs)
-    );
-  };
+  updateFilteredList = (filter) => {
+    this.setState({ filteredList: filter })
+  }
 
   render() {
     return (
@@ -81,17 +41,17 @@ class App extends Component {
           filterFunc={this.updateFilteredList}
           sidebarOpen={this.state.sidebarOpen}
           toggleSidebar={this.toggleSidebar}
-          markers={this.state.markers}
-          //activeMarker={this.state.activeMarker}
-          showInfoWindow={this.state.showInfoWindow}
-          listItemClicked={this.listItemClicked}
         />
-        <div id="main">
-          <div id="header">
-            <button className="btnMenu" onClick={this.toggleSidebar}>
-              <i className="fas fa-bars" />
+        <div id='main'>
+          <div id='header'>
+            <div>
+            <button className='btnMenu' onClick={this.toggleSidebar}>
+              <i className="fas fa-bars"></i>
             </button>
+            </div>
+            <div>
             <h1>Restaurants near Westminster, CA</h1>
+            </div>
           </div>
           <DisplayMap
             onMarkerMounted={this.onMarkerMounted}
@@ -101,10 +61,6 @@ class App extends Component {
             zoom={this.state.zoom}
             restaurants={this.state.restaurantList}
             filteredList={this.state.filteredList}
-            markers={this.state.markers}
-            clickedItem={this.state.clickedItem}
-            clickedIndex={this.state.clickedIndex}
-            showInfoWindow={this.state.showInfoWindow}
           />
         </div>
       </div>

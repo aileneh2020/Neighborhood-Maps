@@ -73,20 +73,29 @@ h1 {
 }
 
 #search {
-  width: 90%;
+  width: 95%;
   padding: 10px 5%;
 }
 
 #searchBox {
-  width: 72%;
+  width: 74%;
   height: 30px;
-  margin-right: 5px;
-  padding: 0 6px;
+  margin-left: 0px;
+  padding: 2px;
 }
 
-.btnFilter {
-  width: 20%;
-  padding: 7.5px 5.5px;
+#infoDisplay {
+  width: 80%;
+  min-height: 100px;
+  padding: 10% 5%;
+  margin-top: 5%;
+  margin-left: 5%;
+  margin-right: 5%;
+  text-align: left;
+  font-size: 1em;
+  color: #555;
+  background-color: #bbb;
+  visibility: hidden;
 }
 
 .listItem {
@@ -102,4 +111,24 @@ h1 {
 .listItem:hover {
   background-color: #abcbff;
   color: #fff;
+}
+
+/** RESPONSIVENESS **/
+
+@media screen and (max-width: 450px) {
+  h1 {
+    font-size: 1.5em;
+  }
+
+  #header {
+    flex-flow: row wrap;
+    justify-content: space-around;
+    font-size: 0.5em;
+  }
+}
+
+@media screen and (min-width: 451px & max-width: 580px) {
+  #header {
+    font-size: 1.5em;
+  }
 }

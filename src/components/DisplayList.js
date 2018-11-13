@@ -1,46 +1,50 @@
-import React, { Component } from 'react'
-import '../App.css'
+import React, { Component } from 'react';
+import '../App.css';
 
 class DisplayList extends Component {
 	state = {
 		query: '',
-		// filteredList: this.props.restaurants.restaurants,
-		showInfoWindow: this.props.showInfoWindow
+		activeListItem: {}
 	}
 
 	updateQuery = (query) => {
 		this.setState({ query: query },
 			this.filterLocations(this.props.restaurants.restaurants, query)
 		)
-		console.log(query)  /**REMOVE**/
+
+		// Clear detailed info box if user is typing
+		document.getElementById('infoDisplay').style.visibility = 'hidden';
 	}
 
 	filterLocations = (allList, query) => {
-		// if (this.state.query === '' || this.state.query === undefined) {
-		// 	return this.setState({ filteredList: [] })
-		// }
+		// If user enters query then search for matches
 		if (query.length > 0) {
 			let filter = allList.filter(loc =>
 				loc.name.toLowerCase().includes(query.toLowerCase())
 			)
 			this.props.filterFunc(filter)
-			// this.setState({ filteredList: filter })
-			console.log(filter)  /**REMOVE**/
-			// if (filter.length > 0) {
-			// 	this.setState({ filteredList: filter })
 		} else {
-			//this.setState({ filteredList: [] })
-			//if no query exist then filteredList equals all restaurants
-			// this.setState({ filteredList: allList })
-			// this.props.filterFunc(this.props.restaurants.restaurants)
-			this.props.filterFunc(this.props.restaurants)
-			console.log('no search performed, show all restaurants')
+			// If no query then filteredList contains all restaurants
+			this.props.filterFunc(this.props.restaurants.restaurants)
 		}
 	}
 
+	listItemClicked = (rest, index) => {
+		let thisItem = this.props.filteredList[index]
+		console.log(this.props.filteredList[index])  /**REMOVE**/
+
+		this.setState({
+			activeListItem: thisItem
+		})
+
+		// Show details of selected restaurant within sidebar
+		document.getElementById('infoDisplay').style.visibility = 'visible';
+	}
+
 	render() {
-		let allRestaurants = this.props.restaurants.restaurants
-		let filteredRestaurants = this.props.filteredList
+		//let allRestaurants = this.props.restaurants.restaurants
+		let filteredRestaurants = this.props.filteredList;
+		let selection = this.state.activeListItem;
 
 		return(
 			<div id='sidebar'>
@@ -52,12 +56,12 @@ class DisplayList extends Component {
 						type='text'
 						placeholder='Filter restaurants by name'
 						value={this.state.query}
-						onChange={(event) => this.updateQuery(event.target.value)} />
-					<button className='btnFilter'>{'Filter'}</button>
+						onChange={(event) => this.updateQuery(event.target.value)}
+					/>
 				</div>
 				<div>
-					{this.props.filteredList.length ?
-						this.props.filteredList.map((rest, index) =>
+					{filteredRestaurants.length ?
+						filteredRestaurants.map((rest, index) =>
 							<button
 								className='listItem'
 								key={index}
@@ -67,8 +71,22 @@ class DisplayList extends Component {
 						) : 'No Results Found'
 					}
 				</div>
+				<div id='infoDisplay'>
+					<h4>{selection.name}</h4>
+					<h4>{selection.street}</h4>
+					<h4>{selection.city+', '+selection.state+', '+selection.zip}</h4>
+					{selection.url ?
+						<a
+							href={selection.url}
+							target='_blank'
+							rel='noopener noreferrer'>
+							{selection.url}
+						</a> :
+						''
+					}
+				</div>
 			</div>
-		)
+		);
 	}
 }
 
