@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react'
-import '../App.css'
+import React, { Component } from 'react';
+import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
+import '../App.css';
 
-const mapKey='AIzaSyBuL7mjc3O3hhrdTWuHRwdKv6k11bUbisk'
-const fsClientID='0KIQPKH3YXQ0JVIUFLOKB315XNQ2VNE31YRMWYIRFT42S3CV'
-const fsClientSecret='OYN5K2A3JMLM3FHP2OVB3CVK4CLP5FJDPXJNSRPHFJVWDRGV'
-const fsVersion='20181108'
+const mapKey='AIzaSyBuL7mjc3O3hhrdTWuHRwdKv6k11bUbisk';
+const fsClientID='0KIQPKH3YXQ0JVIUFLOKB315XNQ2VNE31YRMWYIRFT42S3CV';
+const fsClientSecret='OYN5K2A3JMLM3FHP2OVB3CVK4CLP5FJDPXJNSRPHFJVWDRGV';
+const fsVersion='20181108';
 
 class DisplayMap extends Component {
 	state = {
@@ -17,7 +17,7 @@ class DisplayMap extends Component {
 	}
 
 	mapLoaded = (map) => {
-		this.setState({map})
+		this.setState({ map })
 	}
 
 	getVenueData = (props, fsData) => {
@@ -25,46 +25,47 @@ class DisplayMap extends Component {
 		// Accept names that are longer or shorter versions of same restaurant
 		return fsData.response.venues.filter(item =>
 			item.name.includes(props.name) || props.name.includes(item.name)
-		)
+		);
 	}
 
 	onMarkerClick = (props, marker) => {
-		let baseUrl = `https://api.foursquare.com/v2/venues/search?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&ll=${props.position.lat},${props.position.lng}&llAcc=100`
+		// Set up fetch URL
+		let baseUrl = `https://api.foursquare.com/v2/venues/search?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&ll=${props.position.lat},${props.position.lng}&llAcc=100`;
 		let headers = new Headers();
 		let request = new Request(baseUrl, {
 			method: 'GET',
 			headers
 		});
-		let currMarker
+		let currMarker;
 
 		// Request data from FourSquare for current marker
 		fetch(request)
-			.then(response => response.json())
-			.then(result => {
-				let currRestaurant = this.getVenueData(props, result)
-				this.setState({
-					currMarker: {
-						...props,
-						fs: currRestaurant[0]
-					}
-				})
-
-				// If FourSquare data found, search for venue's photo
-				if (this.state.currMarker.fs) {
-					let detailUrl = `https://api.foursquare.com/v2/venues/${currRestaurant[0].id}/photos?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&limit=1`
-					fetch(detailUrl)
-					.then(response => response.json())
-					.then(result => {
-						console.log(result)
-						this.setState({
-							currMarker: {
-								...currMarker,
-								image: result.response.photos
-							}
-						})
-					})
+		.then(response => response.json())
+		.then(result => {
+			let currRestaurant = this.getVenueData(props, result)
+			this.setState({
+				currMarker: {
+					...props,
+					fs: currRestaurant[0]
 				}
 			})
+
+			// If FourSquare data found, search for venue's photo
+			if (this.state.currMarker.fs) {
+				let detailUrl = `https://api.foursquare.com/v2/venues/${currRestaurant[0].id}/photos?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&limit=1`;
+
+				fetch(detailUrl)
+				.then(response => response.json())
+				.then(result => {
+					this.setState({
+						currMarker: {
+							...currMarker,
+							image: result.response.photos
+						}
+					})
+				})
+			}
+		})
 
 		// Stop animation on any previous active marker
 		if (this.state.showInfoWindow) {
@@ -102,24 +103,15 @@ class DisplayMap extends Component {
 		}
 	}
 
-	// THIS FUNCTION MAY BE IRRELEVANT, CONSIDER DELETE
-	loadMarkers = (restaurants) => {
-		if (!restaurants) {
-			return alert('No restaurants to show')
-		}
-	}
-
 	render() {
 		const style = {
 			height: '100%',
 			width: '100%'
 		}
-
 		const center = {
 			lat: this.props.lat,
 			lng: this.props.lng
 		}
-
 
 		return (
 			<div id='map'>
