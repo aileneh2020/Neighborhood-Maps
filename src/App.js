@@ -12,7 +12,7 @@ class App extends Component {
     restaurantList: restaurants,
     filteredList: restaurants.restaurants,
     markers: null,
-    activeMarker: {},
+    //activeMarker: {},
     clickedItem: [],
     clickedIndex: null,
     showInfoWindow: false,
@@ -54,8 +54,7 @@ class App extends Component {
       };
     }, this.print);
 
-    // trying to attach marker to this item
-    // window.google.maps.event.addListener(thisItem, 'click', this.printA)
+
   };
 
   print = () => {
@@ -83,7 +82,7 @@ class App extends Component {
           sidebarOpen={this.state.sidebarOpen}
           toggleSidebar={this.toggleSidebar}
           markers={this.state.markers}
-          activeMarker={this.state.activeMarker}
+          //activeMarker={this.state.activeMarker}
           showInfoWindow={this.state.showInfoWindow}
           listItemClicked={this.listItemClicked}
         />
@@ -96,6 +95,7 @@ class App extends Component {
           </div>
           <DisplayMap
             onMarkerMounted={this.onMarkerMounted}
+            markerObjs={this.state.markerObjs}
             lat={this.state.lat}
             lng={this.state.lng}
             zoom={this.state.zoom}

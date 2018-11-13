@@ -50,7 +50,7 @@ class DisplayList extends Component {
 						id='searchBox'
 						aria-label='search filter'
 						type='text'
-						placeholder='Filter restaurants'
+						placeholder='Filter restaurants by name'
 						value={this.state.query}
 						onChange={(event) => this.updateQuery(event.target.value)} />
 					<button className='btnFilter'>{'Filter'}</button>

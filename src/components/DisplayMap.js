@@ -12,7 +12,7 @@ class DisplayMap extends Component {
     map: null,
     showInfoWindow: false,
     markerProps: [],
-    activeMarker: {},
+    activeMarker: null,
     selectedLoc: {},
     currMarker: {}
   };
@@ -28,17 +28,45 @@ class DisplayMap extends Component {
       console.log(props);
       console.log(this.state.markerProps);
       console.log(this.props.clickedIndex);
-      // window.google.maps.Marker(this.props.clickedItem, 'click', this.onMarkerClick(props, this.props.clickedItem))
-      let listMarker = this.state.markerProps.filter(
-        item => item.name === this.props.clickedItem.name
-      );
-      console.log(listMarker);
+			console.log(this.props.markerObjs);
+
+			let listMarkerArray = this.props.markerObjs.filter(item =>
+				item.name === this.props.clickedItem.name
+			);
+			let listMarker = listMarkerArray[0];
+			console.log(listMarker);
+			console.log(this.state.activeMarker);
+
+			if (!this.state.activeMarker) {
+				// this.getClickedItem(listMarker);
+				this.setState({ activeMarker: this.props.markerObjs[0] },
+					() => console.log(this.state.activeMarker))
+			}
+
+			if (listMarker === this.state.activerMarker) {
+				this.onMarkerClick(props, listMarker)
+			}
+
+			// if (this.state.activeMarker && this.state.activeMarker !== listMarker) {
+			// 	this.getClickedItem(listMarker);
+			// }
+
+      // let listMarker = this.props.markerObjs.filter(
+      //   item => item.name === this.props.clickedItem.name
+      // );
+      // console.log(listMarker);
       //	this.onListClick(props, listMarker)
       // window.google.maps.event.trigger(Marker, 'click',
       // 	alert('clicked')
       // )
     }
   };
+
+	// getClickedItem = (listMarker) => {
+	// 	this.setState({ activeMarker: listMarker },
+	// 	console.log(this.state.activeMarker)
+	// 	)
+	// }
 
   mapLoaded = (props, map) => {
     this.setState({ map });
@@ -127,9 +155,8 @@ class DisplayMap extends Component {
 
   onMarkerClick = (props, marker) => {
     console.log(marker);
-    let baseUrl = `https://api.foursquare.com/v2/venues/search?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&ll=${
-      props.position.lat
-    },${props.position.lng}&llAcc=100`;
+    let baseUrl = `https://api.foursquare.com/v2/venues/search?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&ll=${props.lat},${props.lng}&llAcc=100`;
+		// let baseUrl = `https://api.foursquare.com/v2/venues/search?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&ll=${marker.lat},${marker.lng}&llAcc=100`;
     let headers = new Headers();
     let request = new Request(baseUrl, {
       method: "GET",
@@ -141,7 +168,7 @@ class DisplayMap extends Component {
     fetch(request)
       .then(response => response.json())
       .then(result => {
-        let currRestaurant = this.getVenueData(props, result);
+        let currRestaurant = this.getVenueData(marker, result);
         this.setState({
           currMarker: {
             ...props,
@@ -277,6 +304,8 @@ class DisplayMap extends Component {
                 address={rest.street}
                 url={rest.url}
                 position={rest.location}
+								lat={rest.location.lat}
+								lng={rest.location.lng}
                 key={index}
                 onClick={this.onMarkerClick}
                 animation={this.props.google.maps.Animation.null}
