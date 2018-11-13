@@ -31,7 +31,6 @@ class DisplayList extends Component {
 
 	listItemClicked = (rest, index) => {
 		let thisItem = this.props.filteredList[index]
-		console.log(this.props.filteredList[index])  /**REMOVE**/
 
 		this.setState({
 			activeListItem: thisItem
@@ -42,7 +41,6 @@ class DisplayList extends Component {
 	}
 
 	render() {
-		//let allRestaurants = this.props.restaurants.restaurants
 		let filteredRestaurants = this.props.filteredList;
 		let selection = this.state.activeListItem;
 
@@ -65,7 +63,7 @@ class DisplayList extends Component {
 							<button
 								className='listItem'
 								key={index}
-								onClick={e => this.props.listItemClicked(rest, index)}
+								onClick={e => this.listItemClicked(rest, index)}
 							>{rest.name}
 							</button>
 						) : 'No Results Found'
