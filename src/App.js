@@ -45,7 +45,7 @@ class App extends Component {
         <div id='main'>
           <header>
             <div>
-              <button className='showMenu' aria-label='show menu' onClick={this.toggleSidebar}>
+              <button className='showMenu' aria-label='show menu' tabindex='-1' onClick={this.toggleSidebar}>
                 <i className="fas fa-bars"></i>
               </button>
             </div>
