@@ -2,22 +2,26 @@
   text-align: center;
 }
 
-h1 {
-  font-family: 'arial', sans-serif;
-}
-
-#header {
+header {
   background-color: #444;
   min-height: 80px;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
   align-items: center;
   justify-content: center;
   font-size: 0.8em;
   color: #fff;
 }
 
-#header .btnMenu {
+h1 {
+  font-family: 'arial', sans-serif;
+}
+
+#page-title {
+  width: 75%;
+}
+
+.showMenu {
   position: absolute;
   left: 40px;
   top: 36px;
@@ -28,9 +32,9 @@ h1 {
   background-color: #fff;
 }
 
-#map {
-  height: 100%;
-  width: 100%;
+#map-container {
+  height: 100vh;
+  width: 100vw;
 }
 
 .infoText {
@@ -57,7 +61,7 @@ h1 {
   transition: 0.5s;
 }
 
-#sidebar .btnClose {
+#sidebar .closeMenu {
   postion: absolute;
   top: 0;
   right: 25px;
@@ -73,18 +77,20 @@ h1 {
 }
 
 #search {
-  width: 95%;
-  padding: 10px 5%;
+  width: 100%;
+  padding: 10px 0;
 }
 
-#searchBox {
-  width: 74%;
+#search-box {
+  width: 80%;
   height: 30px;
-  margin-left: 0px;
+  margin: 5px;
   padding: 2px;
+  border-width: thin;
+  border-style: inset;
 }
 
-#infoDisplay {
+#info-display {
   width: 80%;
   min-height: 100px;
   padding: 10% 5%;

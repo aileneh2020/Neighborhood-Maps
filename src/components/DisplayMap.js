@@ -104,21 +104,14 @@ class DisplayMap extends Component {
 	}
 
 	render() {
-		const style = {
-			height: '100%',
-			width: '100%'
-		}
 		const center = {
 			lat: this.props.lat,
 			lng: this.props.lng
 		}
 
 		return (
-			<div id='map'>
+			<div id='map-container' role='application' aria-label='Google Maps'>
 				<Map
-					role='application'
-					aria-label='map'
-					style={style}
 					initialCenter={center}
 					zoom={this.props.zoom}
 					google={this.props.google}
@@ -143,9 +136,12 @@ class DisplayMap extends Component {
 							onClose={this.onClose}
 						>
 							<div>
-								<h4 className='infoText'>{this.state.selectedLoc.name}</h4>
+								<h4 className='infoText'>
+									{this.state.selectedLoc.name}
+								</h4>
 								{this.state.selectedLoc.url ?
 									<a
+										aria-label='restaurant website'
 										href={this.state.selectedLoc.url}
 										target='_blank'
 										rel='noopener noreferrer'>

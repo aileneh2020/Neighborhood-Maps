@@ -22,7 +22,7 @@ class App extends Component {
       );
     } else if (this.state.sidebarOpen === false) {
       return (
-        (document.getElementById("sidebar").style.width = "350px"),
+        (document.getElementById("sidebar").style.width = "320px"),
         this.setState({ sidebarOpen: true })
       );
     }
@@ -43,16 +43,16 @@ class App extends Component {
           toggleSidebar={this.toggleSidebar}
         />
         <div id='main'>
-          <div id='header'>
+          <header>
             <div>
-            <button className='btnMenu' onClick={this.toggleSidebar}>
-              <i className="fas fa-bars"></i>
-            </button>
+              <button className='showMenu' aria-label='show menu' onClick={this.toggleSidebar}>
+                <i className="fas fa-bars"></i>
+              </button>
             </div>
-            <div>
-            <h1>Restaurants near Westminster, CA</h1>
+            <div id='page-title'>
+              <h1>Restaurants near Westminster, CA</h1>
             </div>
-          </div>
+          </header>
           <DisplayMap
             onMarkerMounted={this.onMarkerMounted}
             markerObjs={this.state.markerObjs}

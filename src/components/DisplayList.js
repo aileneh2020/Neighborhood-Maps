@@ -30,11 +30,9 @@ class DisplayList extends Component {
 	}
 
 	listItemClicked = (rest, index) => {
-		let thisItem = this.props.filteredList[index]
+		let thisItem = this.props.filteredList[index];
 
-		this.setState({
-			activeListItem: thisItem
-		})
+		this.setState({ activeListItem: thisItem })
 
 		// Show details of selected restaurant within sidebar
 		document.getElementById('infoDisplay').style.visibility = 'visible';
@@ -46,10 +44,11 @@ class DisplayList extends Component {
 
 		return(
 			<div id='sidebar'>
-				<button className='btnClose' onClick={this.props.toggleSidebar}>X</button>
+				<button className='closeMenu' aria-label='close menu'  onClick={this.props.toggleSidebar}>X</button>
 				<div id='search'>
 					<input
-						id='searchBox'
+						id='search-box'
+						role='searchbox'
 						aria-label='search filter'
 						type='text'
 						placeholder='Filter restaurants by name'
@@ -62,6 +61,7 @@ class DisplayList extends Component {
 						filteredRestaurants.map((rest, index) =>
 							<button
 								className='listItem'
+								aria-label='restaurant listing'
 								key={index}
 								onClick={e => this.listItemClicked(rest, index)}
 							>{rest.name}
@@ -69,12 +69,13 @@ class DisplayList extends Component {
 						) : 'No Results Found'
 					}
 				</div>
-				<div id='infoDisplay'>
-					<h4>{selection.name}</h4>
-					<h4>{selection.street}</h4>
-					<h4>{selection.city+', '+selection.state+', '+selection.zip}</h4>
+				<div id='info-display'>
+					<h3>{selection.name}</h3>
+					<h3>{selection.street}</h3>
+					<h3>{selection.city+', '+selection.state+', '+selection.zip}</h3>
 					{selection.url ?
 						<a
+							aria-label='restaurant website'
 							href={selection.url}
 							target='_blank'
 							rel='noopener noreferrer'>
