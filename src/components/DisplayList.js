@@ -33,7 +33,7 @@ class DisplayList extends Component {
 		let thisItem = this.props.filteredList[index];
 
 		this.setState({ activeListItem: thisItem })
-
+		console.log(thisItem)
 		// Show details of selected restaurant within sidebar
 		document.getElementById('infoDisplay').style.visibility = 'visible';
 	}
@@ -69,7 +69,7 @@ class DisplayList extends Component {
 						) : 'No Results Found'
 					}
 				</div>
-				<div id='info-display'>
+				<div id='infoDisplay'>
 					<h3>{selection.name}</h3>
 					<h3>{selection.street}</h3>
 					<h3>{selection.city+', '+selection.state+', '+selection.zip}</h3>
