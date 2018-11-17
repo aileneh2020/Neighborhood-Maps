@@ -11,13 +11,42 @@ class DisplayMap extends Component {
 	state = {
 		map: null,
 		showInfoWindow: false,
+		allMarkers: [],
 		activeMarker: {},
 		selectedLoc: {},
 		currMarker: {}
 	}
 
-	mapLoaded = (map) => {
-		this.setState({ map })
+	mapLoaded = (props, map) => {
+		this.setState({ map });
+		// this.loadMarkers(this.props.restaurants);
+	}
+
+	// TODO: got all markers created, did it move to allMarkers[]? need to display on map.
+	componentDidMount(props) {
+		// loadMarkers = (props) => {
+			if (!this.props.restaurants) { return; console.log('no restaurants loaded')}
+			let markers = [];
+			console.log(this.props.restaurants)
+			this.props.restaurants.map(restaurant => {
+				let marker = new this.props.google.maps.Marker({
+					map: this.state.map,
+					name: restaurant.name,
+					url: restaurant.url,
+					position: restaurant.position,
+					key: restaurant.index,
+					visible: true,
+					animation: this.props.google.maps.Animation.null
+				})
+				markers.push(marker);
+				marker.addListener('click', () => {
+					this.onMarkerClick(marker)
+				})
+			})
+			console.log(markers)
+			this.setState({ allMarkers: markers })
+			console.log(this.state.allMarkers)
+		// }
 	}
 
 	getVenueData = (props, fsData) => {
@@ -108,6 +137,7 @@ class DisplayMap extends Component {
 			lat: this.props.lat,
 			lng: this.props.lng
 		}
+		let restaurants = this.props.restaurants;
 
 		return (
 			<div id='map-container' role='application' aria-label='Google Maps'>
@@ -118,50 +148,38 @@ class DisplayMap extends Component {
 					onReady={this.mapLoaded}
 					onClick={this.onMapClick}
 				>
-					{this.props.filteredList &&
-					this.props.filteredList.map((rest, index) => (
-						<Marker
-							name={rest.name}
-							address={rest.street}
-							url={rest.url}
-							position={rest.location}
-							key={index}
-							onClick={this.onMarkerClick}
-							animation={this.props.google.maps.Animation.null}
-						/>
-					))}
-						<InfoWindow
-							marker={this.state.activeMarker}
-							visible={this.state.showInfoWindow}
-							onClose={this.onClose}
-						>
-							<div>
-								<h4 className='infoText'>
-									{this.state.selectedLoc.name}
-								</h4>
-								{this.state.selectedLoc.url ?
-									<a
-										aria-label='restaurant website'
-										href={this.state.selectedLoc.url}
-										target='_blank'
-										rel='noopener noreferrer'>
-										{this.state.selectedLoc.url}
-									</a> :
-									''
+					<InfoWindow
+						marker={this.state.activeMarker}
+						visible={this.state.showInfoWindow}
+						onClose={this.onClose}
+					>
+						<div>
+							<h4 className='infoText'>
+								{this.state.selectedLoc.name}
+							</h4>
+							{this.state.selectedLoc.url ?
+								<a
+									aria-label='restaurant website'
+									href={this.state.selectedLoc.url}
+									target='_blank'
+									rel='noopener noreferrer'>
+									{this.state.selectedLoc.url}
+								</a> :
+								''
+							}
+							<div className='infoImage'>
+								{this.state.currMarker.image ?
+									<div>
+										<img
+										alt={'Photo of ' + this.state.selectedLoc.name}
+										src={this.state.currMarker.image.items[0].prefix + 'cap100' + this.state.currMarker.image.items[0].suffix}/>
+										<p>Photo by FourSquare</p>
+									</div> :
+									'No Image Available'
 								}
-								<div className='infoImage'>
-									{this.state.currMarker.image ?
-										<div>
-											<img
-											alt={'Photo of ' + this.state.selectedLoc.name}
-											src={this.state.currMarker.image.items[0].prefix + 'cap100' + this.state.currMarker.image.items[0].suffix}/>
-											<p>Photo by FourSquare</p>
-										</div> :
-										'No Image Available'
-									}
-								</div>
 							</div>
-						</InfoWindow>
+						</div>
+					</InfoWindow>
 				</Map>
 			</div>
 		)

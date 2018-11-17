@@ -9,7 +9,7 @@ class App extends Component {
     lat: 33.7592028,
     lng: -117.9897071,
     zoom: 13,
-    restaurantList: restaurants,
+    restaurantList: restaurants.restaurants,
     filteredList: restaurants.restaurants,
     sidebarOpen: false
   }
@@ -35,6 +35,16 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <header>
+          <div>
+            <button className='showMenu' aria-label='show menu' onClick={this.toggleSidebar}>
+              <i className="fas fa-bars"></i>
+            </button>
+          </div>
+          <div id='page-title'>
+            <h1>Restaurants near Westminster, CA</h1>
+          </div>
+        </header>
         <DisplayList
           restaurants={this.state.restaurantList}
           filteredList={this.state.filteredList}
@@ -42,27 +52,15 @@ class App extends Component {
           sidebarOpen={this.state.sidebarOpen}
           toggleSidebar={this.toggleSidebar}
         />
-        <div id='main'>
-          <header>
-            <div>
-              <button className='showMenu' aria-label='show menu' onClick={this.toggleSidebar}>
-                <i className="fas fa-bars"></i>
-              </button>
-            </div>
-            <div id='page-title'>
-              <h1>Restaurants near Westminster, CA</h1>
-            </div>
-          </header>
-          <DisplayMap
-            onMarkerMounted={this.onMarkerMounted}
-            markerObjs={this.state.markerObjs}
-            lat={this.state.lat}
-            lng={this.state.lng}
-            zoom={this.state.zoom}
-            restaurants={this.state.restaurantList}
-            filteredList={this.state.filteredList}
-          />
-        </div>
+        <DisplayMap
+          onMarkerMounted={this.onMarkerMounted}  /**REMOVE**/
+          markerObjs={this.state.markerObjs}      /**REMOVE**/
+          lat={this.state.lat}
+          lng={this.state.lng}
+          zoom={this.state.zoom}
+          restaurants={this.state.restaurantList}
+          filteredList={this.state.filteredList}
+        />
       </div>
     );
   }
