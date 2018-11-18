@@ -19,7 +19,7 @@ class DisplayMap extends Component {
 
 	mapLoaded = (props, map) => {
 		this.setState({ map });
-		this.loadMarkers();
+		this.loadMarkers(props);
 	}
 
 	// TODO: got all markers created, did it move to allMarkers[]? need to display on map.
@@ -112,10 +112,11 @@ class DisplayMap extends Component {
 			showInfoWindow: true,
 		})
 		marker.setAnimation(this.props.google.maps.Animation.BOUNCE)
+		console.log(this.state.activeMarker)
 	}
 
 	// Reset activeMarker state and close InfoWindow when "X" is clicked
-	onClose = (props) => {
+	onClose = () => {
 		if (this.state.showInfoWindow) {
 			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
 			this.setState({
@@ -159,20 +160,20 @@ class DisplayMap extends Component {
 					>
 						<div>
 							<h4 className='infoText'>
-								{this.state.selectedLoc.name}
+								{this.state.activeMarker && this.state.activeMarker.name}
 							</h4>
-							{this.state.selectedLoc.url ?
+							{this.state.activeMarker && this.state.activeMarker.url ?
 								<a
 									aria-label='restaurant website'
-									href={this.state.selectedLoc.url}
+									href={this.state.activeMarker.url}
 									target='_blank'
 									rel='noopener noreferrer'>
-									{this.state.selectedLoc.url}
+									{this.state.activeMarker.url}
 								</a> :
 								''
 							}
 							<div className='infoImage'>
-								{this.state.currMarker.image ?
+								{this.state.currMarker && this.state.currMarker.image ?
 									<div>
 										<img
 										alt={'Photo of ' + this.state.selectedLoc.name}
