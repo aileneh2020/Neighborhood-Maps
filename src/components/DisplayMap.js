@@ -13,24 +13,12 @@ class DisplayMap extends Component {
 		showInfoWindow: false,
 		allMarkers: [],
 		activeMarker: {},
-		selectedLoc: {},
+		// selectedLoc: {},
 		currMarker: {}
 	}
 
-	componentWillReceiveProps() {
-		let itemProp = this.props.itemClicked;
-		// console.log(itemProp);
-		if (Object.keys(itemProp).length === 0) return;
-		if (itemProp) {
-			let mClicked = this.state.allMarkers.find(marker =>
-				marker.name === this.props.itemClicked.name
-			)
-			// console.log(mClicked);
-			this.onMarkerClick(itemProp, mClicked);
-		}
-	}
-
 	componentDidUpdate() {
+		// Display markers on map based on the current filtered list
 		console.log(this.props.filteredList);
 		console.log(this.state.allMarkers);
 		let filteredMarkers = [];
@@ -50,6 +38,20 @@ class DisplayMap extends Component {
 		})
 	}
 
+	componentWillReceiveProps() {
+		// Check to see if list item is clicked. If so then activate its marker.
+		let itemProp = this.props.itemClicked;
+		// console.log(itemProp);
+		if (Object.keys(itemProp).length === 0) return;
+		if (Object.keys(itemProp).length > 0) {
+			let mClicked = this.state.allMarkers.find(marker =>
+				marker.name === this.props.itemClicked.name
+			)
+			// console.log(mClicked);
+			this.onMarkerClick(itemProp, mClicked);
+		}
+	}
+
 	mapLoaded = (props, map) => {
 		this.setState({ map });
 		this.loadMarkers(props);
@@ -63,12 +65,13 @@ class DisplayMap extends Component {
 		// console.log(this.props.restaurants);	// logs array of 5 objects
 		// console.log(this.state.map);	// map is in state
 
+		// For every restaurant, create a corresponding marker
 		this.props.restaurants.map((restaurant, index) => {
 			let marker = new this.props.google.maps.Marker({
 				map: this.state.map,
 				name: restaurant.name,
 				url: restaurant.url,
-				position: {lat: restaurant.location.lat, lng: restaurant.location.lng},
+				position: {lat: restaurant.position.lat, lng: restaurant.position.lng},
 				key: restaurant.index,
 				animation: this.props.google.maps.Animation.null
 			})
@@ -78,6 +81,7 @@ class DisplayMap extends Component {
 			markers.push(marker);
 		})
 		// console.log(markers)
+		// Save all created markers as an array in state
 		this.setState({ allMarkers: markers })
 		// console.log(this.state.allMarkers)
 	}
@@ -100,7 +104,7 @@ class DisplayMap extends Component {
 			method: 'GET',
 			headers
 		});
-		let currMarker;
+		// let currMarker;	// do I need to declare this since it's a state item?
 
 		// Request data from FourSquare for current marker
 		fetch(request)
@@ -125,12 +129,18 @@ class DisplayMap extends Component {
 				.then(result => {
 					this.setState({
 						currMarker: {
-							...currMarker,
+							// ...currMarker,		// if including this line then need to declare Line 107
 							image: result.response.photos
 						}
 					})
 				})
+				.catch(error => {
+					alert('Unable to retrieve FourSquare data. ' + error)
+				})
 			}
+		})
+		.catch(error => {
+			alert('Unable to retrieve FourSquare data. ' + error)
 		})
 
 		// Stop animation on any previous active marker
@@ -138,7 +148,7 @@ class DisplayMap extends Component {
 			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
 		}
 
-		// Add props to activeMarker state, display InfoWindow, make marker bounce
+		// Add props to activeMarker state, display InfoWindow, make marker bounce briefly
 		this.setState({
 			// selectedLoc: props,
 			activeMarker: marker,
@@ -146,7 +156,8 @@ class DisplayMap extends Component {
 		})
 		marker.setAnimation(this.props.google.maps.Animation.BOUNCE)
 		setTimeout(() => marker.setAnimation(this.props.google.maps.Animation.null), 1000)
-		console.log(this.state.activeMarker)
+		console.log(this.state.activeMarker.name)
+		console.log(this.currMarker)
 	}
 
 	// Reset activeMarker state and close InfoWindow when "X" is clicked
@@ -209,7 +220,7 @@ class DisplayMap extends Component {
 								{this.state.currMarker && this.state.currMarker.image ?
 									<div>
 										<img
-										alt={'Photo of ' + this.state.selectedLoc.name}
+										alt={'Photo of ' + this.state.currMarker.name}
 										src={this.state.currMarker.image.items[0].prefix + 'cap100' + this.state.currMarker.image.items[0].suffix}/>
 										<p>Photo by FourSquare</p>
 									</div> :
