@@ -19,47 +19,49 @@ class DisplayMap extends Component {
 
 	mapLoaded = (props, map) => {
 		this.setState({ map });
-		// this.loadMarkers(this.props.restaurants);
+		this.loadMarkers();
 	}
 
 	// TODO: got all markers created, did it move to allMarkers[]? need to display on map.
-	componentDidMount(props) {
-		// loadMarkers = (props) => {
-			if (!this.props.restaurants) { return; console.log('no restaurants loaded')}
-			let markers = [];
-			console.log(this.props.restaurants)
-			this.props.restaurants.map(restaurant => {
-				let marker = new this.props.google.maps.Marker({
-					map: this.state.map,
-					name: restaurant.name,
-					url: restaurant.url,
-					position: restaurant.position,
-					key: restaurant.index,
-					visible: true,
-					animation: this.props.google.maps.Animation.null
-				})
-				markers.push(marker);
-				marker.addListener('click', () => {
-					this.onMarkerClick(marker)
-				})
+	loadMarkers = (props) => {
+		if (!this.props.restaurants) { return; console.log('no restaurants loaded')}
+
+		let markers = [];
+		console.log(this.props.restaurants);	// logs array of 5 objects
+		console.log(this.state.map);	// map is in state
+
+		this.props.restaurants.map((restaurant, index) => {
+			let marker = new this.props.google.maps.Marker({
+				map: this.state.map,
+				name: restaurant.name,
+				url: restaurant.url,
+				position: {lat: restaurant.location.lat, lng: restaurant.location.lng},
+				key: restaurant.index,
+				animation: this.props.google.maps.Animation.null
 			})
-			console.log(markers)
-			this.setState({ allMarkers: markers })
-			console.log(this.state.allMarkers)
-		// }
+			marker.addListener('click', () => {
+				this.onMarkerClick(restaurant, marker)
+			})
+			markers.push(marker);
+		})
+		console.log(markers)
+		this.setState({ allMarkers: markers })
+		console.log(this.state.allMarkers)
 	}
 
-	getVenueData = (props, fsData) => {
+	getVenueData = (mprops, fsData) => {
 		// Compare FourSquare data for matching restaurant name
 		// Accept names that are longer or shorter versions of same restaurant
 		return fsData.response.venues.filter(item =>
-			item.name.includes(props.name) || props.name.includes(item.name)
+			item.name.includes(mprops.name) || mprops.name.includes(item.name)
 		);
 	}
 
-	onMarkerClick = (props, marker) => {
+	onMarkerClick = (mprops, marker) => {
+		console.log(marker)
+		console.log(mprops)
 		// Set up fetch URL
-		let baseUrl = `https://api.foursquare.com/v2/venues/search?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&ll=${props.position.lat},${props.position.lng}&llAcc=100`;
+		let baseUrl = `https://api.foursquare.com/v2/venues/search?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&ll=${mprops.position.lat},${mprops.position.lng}&llAcc=50`;
 		let headers = new Headers();
 		let request = new Request(baseUrl, {
 			method: 'GET',
@@ -71,10 +73,12 @@ class DisplayMap extends Component {
 		fetch(request)
 		.then(response => response.json())
 		.then(result => {
-			let currRestaurant = this.getVenueData(props, result)
+			// let currRestaurant = this.getVenueData(props, result)
+			console.log(result)
+			let currRestaurant = this.getVenueData(mprops, result)
 			this.setState({
 				currMarker: {
-					...props,
+					...mprops,
 					fs: currRestaurant[0]
 				}
 			})
@@ -103,7 +107,7 @@ class DisplayMap extends Component {
 
 		// Add props to activeMarker state, display InfoWindow, make marker bounce
 		this.setState({
-			selectedLoc: props,
+			// selectedLoc: props,
 			activeMarker: marker,
 			showInfoWindow: true,
 		})
