@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
+import { Map, InfoWindow, GoogleApiWrapper } from 'google-maps-react';
 import '../App.css';
 
 const mapKey='AIzaSyBuL7mjc3O3hhrdTWuHRwdKv6k11bUbisk';
@@ -17,18 +17,51 @@ class DisplayMap extends Component {
 		currMarker: {}
 	}
 
+	componentWillReceiveProps() {
+		let itemProp = this.props.itemClicked;
+		// console.log(itemProp);
+		if (Object.keys(itemProp).length === 0) return;
+		if (itemProp) {
+			let mClicked = this.state.allMarkers.find(marker =>
+				marker.name === this.props.itemClicked.name
+			)
+			// console.log(mClicked);
+			this.onMarkerClick(itemProp, mClicked);
+		}
+	}
+
+	componentDidUpdate() {
+		console.log(this.props.filteredList);
+		console.log(this.state.allMarkers);
+		let filteredMarkers = [];
+		this.state.allMarkers.forEach(marker => {
+			this.props.filteredList.forEach(filter => {
+				if (filter.name === marker.name) {
+					filteredMarkers.push(marker);
+				}
+			})
+		})
+		console.log(filteredMarkers)
+		this.state.allMarkers.forEach(marker => {
+			marker.setVisible(false);
+		})
+		filteredMarkers.forEach(marker => {
+			marker.setVisible(true);
+		})
+	}
+
 	mapLoaded = (props, map) => {
 		this.setState({ map });
 		this.loadMarkers(props);
 	}
 
-	// TODO: got all markers created, did it move to allMarkers[]? need to display on map.
+	// Create and load all markers to map
 	loadMarkers = (props) => {
-		if (!this.props.restaurants) { return; console.log('no restaurants loaded')}
+		if (!this.props.restaurants) return;
 
 		let markers = [];
-		console.log(this.props.restaurants);	// logs array of 5 objects
-		console.log(this.state.map);	// map is in state
+		// console.log(this.props.restaurants);	// logs array of 5 objects
+		// console.log(this.state.map);	// map is in state
 
 		this.props.restaurants.map((restaurant, index) => {
 			let marker = new this.props.google.maps.Marker({
@@ -44,9 +77,9 @@ class DisplayMap extends Component {
 			})
 			markers.push(marker);
 		})
-		console.log(markers)
+		// console.log(markers)
 		this.setState({ allMarkers: markers })
-		console.log(this.state.allMarkers)
+		// console.log(this.state.allMarkers)
 	}
 
 	getVenueData = (mprops, fsData) => {
@@ -58,8 +91,8 @@ class DisplayMap extends Component {
 	}
 
 	onMarkerClick = (mprops, marker) => {
-		console.log(marker)
-		console.log(mprops)
+		// console.log(marker)
+		// console.log(mprops)
 		// Set up fetch URL
 		let baseUrl = `https://api.foursquare.com/v2/venues/search?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&ll=${mprops.position.lat},${mprops.position.lng}&llAcc=50`;
 		let headers = new Headers();
@@ -112,6 +145,7 @@ class DisplayMap extends Component {
 			showInfoWindow: true,
 		})
 		marker.setAnimation(this.props.google.maps.Animation.BOUNCE)
+		setTimeout(() => marker.setAnimation(this.props.google.maps.Animation.null), 1000)
 		console.log(this.state.activeMarker)
 	}
 
@@ -142,7 +176,6 @@ class DisplayMap extends Component {
 			lat: this.props.lat,
 			lng: this.props.lng
 		}
-		let restaurants = this.props.restaurants;
 
 		return (
 			<div id='map-container' role='application' aria-label='Google Maps'>

@@ -9,7 +9,7 @@ class DisplayList extends Component {
 
 	updateQuery = (query) => {
 		this.setState({ query: query },
-			this.filterLocations(this.props.restaurants.restaurants, query)
+			this.filterLocations(this.props.restaurants, query)
 		)
 
 		// Clear detailed info box if user is typing
@@ -25,8 +25,9 @@ class DisplayList extends Component {
 			this.props.filterFunc(filter)
 		} else {
 			// If no query then filteredList contains all restaurants
-			this.props.filterFunc(this.props.restaurants.restaurants)
+			this.props.filterFunc(this.props.restaurants)
 		}
+
 	}
 
 	listItemClicked = (rest, index) => {
@@ -34,6 +35,7 @@ class DisplayList extends Component {
 
 		this.setState({ activeListItem: thisItem })
 		console.log(thisItem)
+		this.props.getItemClicked(thisItem);
 		// Show details of selected restaurant within sidebar
 		document.getElementById('infoDisplay').style.visibility = 'visible';
 	}

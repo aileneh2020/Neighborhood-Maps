@@ -11,6 +11,7 @@ class App extends Component {
     zoom: 13,
     restaurantList: restaurants.restaurants,
     filteredList: restaurants.restaurants,
+    itemClicked: {},
     sidebarOpen: false
   }
 
@@ -22,6 +23,7 @@ class App extends Component {
       );
     } else if (this.state.sidebarOpen === false) {
       return (
+        this.setState({ itemClicked: {} }),
         (document.getElementById("sidebar").style.width = "320px"),
         this.setState({ sidebarOpen: true })
       );
@@ -30,6 +32,12 @@ class App extends Component {
 
   updateFilteredList = (filter) => {
     this.setState({ filteredList: filter })
+  }
+
+  getItemClicked = (item) => {
+    // if (Object.keys(this.state.itemClicked).length)
+    this.setState({itemClicked: item}, () => this.toggleSidebar());
+    // this.forceUpdate();
   }
 
   render() {
@@ -51,15 +59,15 @@ class App extends Component {
           filterFunc={this.updateFilteredList}
           sidebarOpen={this.state.sidebarOpen}
           toggleSidebar={this.toggleSidebar}
+          getItemClicked={this.getItemClicked}
         />
         <DisplayMap
-          onMarkerMounted={this.onMarkerMounted}  /**REMOVE**/
-          markerObjs={this.state.markerObjs}      /**REMOVE**/
           lat={this.state.lat}
           lng={this.state.lng}
           zoom={this.state.zoom}
           restaurants={this.state.restaurantList}
           filteredList={this.state.filteredList}
+          itemClicked={this.state.itemClicked}
         />
       </div>
     );
