@@ -73,6 +73,7 @@ class DisplayList extends Component {
 					}
 				</div>
 				<div id='infoDisplay'>
+					<h2>RESTAURANT DETAILS</h2>
 					<h3>{selection.name}</h3>
 					<h3>{selection.street}</h3>
 					<h3>{selection.city + ', ' + selection.state + ', ' + selection.zip}</h3>
