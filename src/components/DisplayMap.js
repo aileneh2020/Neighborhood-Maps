@@ -13,41 +13,39 @@ class DisplayMap extends Component {
 		showInfoWindow: false,
 		allMarkers: [],
 		activeMarker: {},
-		// selectedLoc: {},
 		currMarker: {}
 	}
 
 	componentDidUpdate() {
-		// Display markers on map based on the current filtered list
-		console.log(this.props.filteredList);
-		console.log(this.state.allMarkers);
 		let filteredMarkers = [];
+
+		// Get a list of all markers that match the current filtered list
 		this.state.allMarkers.forEach(marker => {
 			this.props.filteredList.forEach(filter => {
 				if (filter.name === marker.name) {
 					filteredMarkers.push(marker);
 				}
-			})
-		})
-		console.log(filteredMarkers)
+			});
+		});
+
+		// Display markers on map based on the current filtered list
 		this.state.allMarkers.forEach(marker => {
 			marker.setVisible(false);
-		})
+		});
 		filteredMarkers.forEach(marker => {
 			marker.setVisible(true);
-		})
+		});
 	}
 
 	componentWillReceiveProps() {
-		// Check to see if list item is clicked. If so then activate its marker.
+		// Check to see if a list item is clicked and activate its marker
 		let itemProp = this.props.itemClicked;
-		// console.log(itemProp);
+
 		if (Object.keys(itemProp).length === 0) return;
 		if (Object.keys(itemProp).length > 0) {
 			let mClicked = this.state.allMarkers.find(marker =>
-				marker.name === this.props.itemClicked.name
-			)
-			// console.log(mClicked);
+				marker.name === itemProp.name
+			);
 			this.onMarkerClick(itemProp, mClicked);
 		}
 	}
@@ -57,13 +55,11 @@ class DisplayMap extends Component {
 		this.loadMarkers(props);
 	}
 
-	// Create and load all markers to map
+	// Create and load all markers to the map
 	loadMarkers = (props) => {
-		if (!this.props.restaurants) return;
+		if (!this.props.restaurants.length) return;
 
 		let markers = [];
-		// console.log(this.props.restaurants);	// logs array of 5 objects
-		// console.log(this.state.map);	// map is in state
 
 		// For every restaurant, create a corresponding marker
 		this.props.restaurants.map((restaurant, index) => {
@@ -74,16 +70,15 @@ class DisplayMap extends Component {
 				position: {lat: restaurant.position.lat, lng: restaurant.position.lng},
 				key: restaurant.index,
 				animation: this.props.google.maps.Animation.null
-			})
+			});
 			marker.addListener('click', () => {
 				this.onMarkerClick(restaurant, marker)
-			})
+			});
 			markers.push(marker);
 		})
-		// console.log(markers)
+
 		// Save all created markers as an array in state
 		this.setState({ allMarkers: markers })
-		// console.log(this.state.allMarkers)
 	}
 
 	getVenueData = (mprops, fsData) => {
@@ -95,8 +90,8 @@ class DisplayMap extends Component {
 	}
 
 	onMarkerClick = (mprops, marker) => {
-		// console.log(marker)
-		// console.log(mprops)
+		this.props.resetItemClicked();
+
 		// Set up fetch URL
 		let baseUrl = `https://api.foursquare.com/v2/venues/search?client_id=${fsClientID}&client_secret=${fsClientSecret}&v=${fsVersion}&ll=${mprops.position.lat},${mprops.position.lng}&llAcc=50`;
 		let headers = new Headers();
@@ -104,14 +99,12 @@ class DisplayMap extends Component {
 			method: 'GET',
 			headers
 		});
-		// let currMarker;	// do I need to declare this since it's a state item?
+		let currMarker;
 
 		// Request data from FourSquare for current marker
 		fetch(request)
 		.then(response => response.json())
 		.then(result => {
-			// let currRestaurant = this.getVenueData(props, result)
-			console.log(result)
 			let currRestaurant = this.getVenueData(mprops, result)
 			this.setState({
 				currMarker: {
@@ -129,56 +122,51 @@ class DisplayMap extends Component {
 				.then(result => {
 					this.setState({
 						currMarker: {
-							// ...currMarker,		// if including this line then need to declare Line 107
+							...currMarker,
 							image: result.response.photos
 						}
-					})
+					});
 				})
-				.catch(error => {
-					alert('Unable to retrieve FourSquare data. ' + error)
-				})
+				.catch(error => alert('Unable to retrieve data. ' + error));
 			}
 		})
-		.catch(error => {
-			alert('Unable to retrieve FourSquare data. ' + error)
-		})
+		.catch(error => alert('Unable to retrieve data. ' + error));
 
 		// Stop animation on any previous active marker
 		if (this.state.showInfoWindow) {
-			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
+			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null);
 		}
 
-		// Add props to activeMarker state, display InfoWindow, make marker bounce briefly
+		// Set activeMarker state and display InfoWindow
 		this.setState({
-			// selectedLoc: props,
 			activeMarker: marker,
 			showInfoWindow: true,
-		})
-		marker.setAnimation(this.props.google.maps.Animation.BOUNCE)
-		setTimeout(() => marker.setAnimation(this.props.google.maps.Animation.null), 1000)
-		console.log(this.state.activeMarker.name)
-		console.log(this.currMarker)
+		});
+
+		// Make marker bounce briefly
+		marker.setAnimation(this.props.google.maps.Animation.BOUNCE);
+		setTimeout(() => marker.setAnimation(this.props.google.maps.Animation.null), 1000);
 	}
 
 	// Reset activeMarker state and close InfoWindow when "X" is clicked
 	onClose = () => {
 		if (this.state.showInfoWindow) {
-			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
+			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null);
 			this.setState({
 				showInfoWindow: false,
 				activeMarker: null
-			})
+			});
 		}
 	}
 
 	// Reset activeMarker state and close InfoWindow when map is clicked
 	onMapClick = (props) => {
 		if (this.state.showInfoWindow) {
-			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null)
+			this.state.activeMarker.setAnimation(this.props.google.maps.Animation.null);
 			this.setState({
 				showInfoWindow: false,
 				activeMarker: null
-			})
+			});
 		}
 	}
 
@@ -213,18 +201,16 @@ class DisplayMap extends Component {
 									target='_blank'
 									rel='noopener noreferrer'>
 									{this.state.activeMarker.url}
-								</a> :
-								''
+								</a> : ''
 							}
 							<div className='infoImage'>
-								{this.state.currMarker && this.state.currMarker.image ?
+								{this.state.activeMarker && this.state.currMarker && this.state.currMarker.image ?
 									<div>
 										<img
-										alt={'Photo of ' + this.state.currMarker.name}
+										alt={'Photo of ' + this.state.activeMarker.name}
 										src={this.state.currMarker.image.items[0].prefix + 'cap100' + this.state.currMarker.image.items[0].suffix}/>
 										<p>Photo by FourSquare</p>
-									</div> :
-									'No Image Available'
+									</div> : 'Image Not Available'
 								}
 							</div>
 						</div>

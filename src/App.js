@@ -4,6 +4,7 @@ import DisplayList from './components/DisplayList';
 import DisplayMap from './components/DisplayMap';
 import restaurants from './data/RestaurantList';
 
+
 class App extends Component {
   state = {
     lat: 33.7592028,
@@ -21,23 +22,25 @@ class App extends Component {
         (document.getElementById("sidebar").style.width = 0),
         this.setState({ sidebarOpen: false })
       );
-    } else if (this.state.sidebarOpen === false) {
+    }
+    else if (this.state.sidebarOpen === false) {
       return (
-        this.setState({ itemClicked: {} }),
         (document.getElementById("sidebar").style.width = "320px"),
         this.setState({ sidebarOpen: true })
       );
     }
-  };
+  }
 
   updateFilteredList = (filter) => {
     this.setState({ filteredList: filter })
   }
 
   getItemClicked = (item) => {
-    // if (Object.keys(this.state.itemClicked).length)
     this.setState({itemClicked: item}, () => this.toggleSidebar());
-    // this.forceUpdate();
+  }
+
+  resetItemClicked = () => {
+    this.setState({ itemClicked: {} })
   }
 
   render() {
@@ -45,7 +48,7 @@ class App extends Component {
       <div className="App">
         <header>
           <div>
-            <button className='showMenu' aria-label='show menu' onClick={this.toggleSidebar}>
+            <button className='menuBtn' aria-label='show menu' onClick={this.toggleSidebar}>
               <i className="fas fa-bars"></i>
             </button>
           </div>
@@ -68,6 +71,7 @@ class App extends Component {
           restaurants={this.state.restaurantList}
           filteredList={this.state.filteredList}
           itemClicked={this.state.itemClicked}
+          resetItemClicked={this.resetItemClicked}
         />
       </div>
     );
